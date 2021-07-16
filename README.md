@@ -1,16 +1,19 @@
-# focus_app
+# FOCUS APP 
+#### A pomodoro integrated mobile app that helps you focus on to your studies and control your use of social media apps
 
-A new Flutter project.
 
-## Getting Started
+## REGISTER/LOGIN
+![Register/Login](https://github.com/Inherit-study/FocusApp/blob/main/assets/Sample.jpg?style=centerme)
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+#### UPDATED FIRST SCREEN
+- Still got many ways to go, but we'll get there. (July 07, 2020)
+- Screens were added up to dashboard. As of now (July 17, 2020), working on authentication.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+
+
+
+### TEAM DoIT
+#### "When your brain starts hurting, that's when you know you're learning" - us
