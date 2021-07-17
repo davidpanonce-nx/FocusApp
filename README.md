@@ -10,6 +10,7 @@
 #### UPDATED FIRST SCREEN
 - Still got many ways to go, but we'll get there. (July 07, 2020)
 - Screens were added up to dashboard. As of now (July 17, 2020), working on authentication.
+- Basic Authentication for registration was done (Jul 18, 2020), working further on Email Verification and User Data on FireStore
 
 
 
