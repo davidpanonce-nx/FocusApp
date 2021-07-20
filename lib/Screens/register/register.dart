@@ -22,6 +22,8 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
 
   bool _obscureText1 = true;
   bool _obscureText2 = true;
+  bool _otpSent = false;
+  bool _otpVerified = false;
 
   @override
   void initState() {
@@ -58,7 +60,9 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
 
     var data = await EmailAuth.sendOtp(receiverMail: _emailController!.text);
     if (data) {
-      print("OTP SENT");
+      setState(() {
+        _otpSent = true;
+      });
     }
   }
 
@@ -66,7 +70,9 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
     var res = EmailAuth.validate(
         receiverMail: _emailController!.text, userOTP: _codeController!.text);
     if (res) {
-      print("OTP VERIFIED");
+      setState(() {
+        _otpVerified = true;
+      });
     }
   }
 
@@ -385,23 +391,40 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
                       SizedBox(
                         height: size.height / 70,
                       ),
-                      ElevatedButton(
-                        onPressed: () => sendOtp(),
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            primary: buttonColor,
-                            minimumSize: Size(size.width - 300, 0)),
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            'Send Code',
-                            style: Theme.of(context)
-                                .primaryTextTheme
-                                .bodyText2!
-                                .copyWith(color: primary),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () => sendOtp(),
+                            style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                primary: buttonColor,
+                                minimumSize: Size(size.width - 300, 0)),
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                'Send Code',
+                                style: Theme.of(context)
+                                    .primaryTextTheme
+                                    .bodyText2!
+                                    .copyWith(color: primary),
+                              ),
+                            ),
                           ),
-                        ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          if (_otpSent == true)
+                            Text(
+                              "Code already sent to email",
+                              style: Theme.of(context)
+                                  .primaryTextTheme
+                                  .bodyText1!
+                                  .copyWith(
+                                    color: Colors.amberAccent,
+                                  ),
+                            ),
+                        ],
                       ),
                       SizedBox(
                         height: size.height / 30,
@@ -450,23 +473,40 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
                       SizedBox(
                         height: size.height / 70,
                       ),
-                      ElevatedButton(
-                        onPressed: () => verifyOtp(),
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            primary: buttonColor,
-                            minimumSize: Size(size.width - 300, 0)),
-                        child: Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            'Verify Code',
-                            style: Theme.of(context)
-                                .primaryTextTheme
-                                .bodyText2!
-                                .copyWith(color: primary),
+                      Row(
+                        children: [
+                          ElevatedButton(
+                            onPressed: () => verifyOtp(),
+                            style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10)),
+                                primary: buttonColor,
+                                minimumSize: Size(size.width - 300, 0)),
+                            child: Padding(
+                              padding: EdgeInsets.all(10),
+                              child: Text(
+                                'Verify Code',
+                                style: Theme.of(context)
+                                    .primaryTextTheme
+                                    .bodyText2!
+                                    .copyWith(color: primary),
+                              ),
+                            ),
                           ),
-                        ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          if (_otpVerified == true)
+                            Text(
+                              "Code Verified",
+                              style: Theme.of(context)
+                                  .primaryTextTheme
+                                  .bodyText1!
+                                  .copyWith(
+                                    color: Colors.amberAccent,
+                                  ),
+                            ),
+                        ],
                       ),
                       SizedBox(
                         height: size.height / 30,
@@ -483,6 +523,8 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
                                 _passwordController!.text.trim(),
                               );
                             }
+                            _otpSent = false;
+                            _otpVerified = false;
                           },
                           style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
