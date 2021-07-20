@@ -2,7 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
-import 'package:focus_app/Screens/register/register.dart';
+import 'package:focus_app/Screens/login.dart';
+
 import 'package:focus_app/Services/authentication_service.dart';
 import 'package:provider/provider.dart';
 
@@ -88,7 +89,7 @@ class FocusHomepage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: RegisterCredentials(),
+      body: Login(),
     );
   }
 }

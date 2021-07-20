@@ -421,6 +421,23 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
                         ),
                       ),
                     ),
+                    SizedBox(
+                      height: size.height / 30,
+                    ),
+                    if (loginProvider.errorMessage != '')
+                      Container(
+                        color: Colors.amberAccent,
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                        child: ListTile(
+                          title: Text(loginProvider.errorMessage),
+                          leading: Icon(Icons.error),
+                          trailing: IconButton(
+                            onPressed: () => loginProvider.setMessage(''),
+                            icon: Icon(Icons.close),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),

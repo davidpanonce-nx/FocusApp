@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 class AuthServices with ChangeNotifier {
   bool _isLoading = false;
-  String? _errorMessage;
+  String _errorMessage = '';
   bool get isLoading => _isLoading;
-  String get errorMessage => _errorMessage!;
+  String get errorMessage => _errorMessage;
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   Future register(String email, String password) async {
@@ -21,9 +21,9 @@ class AuthServices with ChangeNotifier {
     } on SocketException {
       setLoading(false);
       setMessage("No internet, please connect to the internet");
-    } catch (error) {
+    } catch (e) {
       setLoading(false);
-      setMessage(error.toString());
+      setMessage(e.toString());
     }
     notifyListeners();
   }
@@ -39,9 +39,9 @@ class AuthServices with ChangeNotifier {
     } on SocketException {
       setLoading(false);
       setMessage("No internet, please connect to the internet");
-    } catch (error) {
+    } catch (e) {
       setLoading(false);
-      setMessage(error.toString());
+      setMessage(e.toString());
     }
     notifyListeners();
   }
