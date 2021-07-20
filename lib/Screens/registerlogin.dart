@@ -75,7 +75,7 @@ class WelcomePage extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          'Weclome to Focus',
+                          'Welcome to Focus',
                           style: Theme.of(context).primaryTextTheme.headline1,
                         ),
                         Text(

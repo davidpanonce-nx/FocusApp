@@ -1,3 +1,4 @@
+import 'package:email_auth/email_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
 import 'package:focus_app/Services/authentication_service.dart';
@@ -6,7 +7,7 @@ import 'package:provider/provider.dart';
 class RegisterCredentials extends StatefulWidget {
   const RegisterCredentials({Key? key}) : super(key: key);
 
-  @override
+  @override 
   _RegisterCredentialsState createState() => _RegisterCredentialsState();
 }
 
@@ -52,6 +53,23 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
     _obscureText2 = !_obscureText2;
   }
 
+  void sendOtp() async {
+    EmailAuth.sessionName = "Focus App";
+
+    var data = await EmailAuth.sendOtp(receiverMail: _emailController!.text);
+    if (data) {
+      print("OTP SENT");
+    }
+  }
+
+  void verifyOtp() {
+    var res = EmailAuth.validate(
+        receiverMail: _emailController!.text, userOTP: _codeController!.text);
+    if (res) {
+      print("OTP VERIFIED");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -71,7 +89,6 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
           SingleChildScrollView(
             child: Container(
               margin: EdgeInsets.fromLTRB(15, 30, 15, 45),
-              // decoration: BoxDecoration(color: Colors.grey),
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -316,7 +333,7 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
                       height: size.height / 70,
                     ),
                     ElevatedButton(
-                      onPressed: () => {},
+                      onPressed: () => sendOtp(),
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -340,6 +357,7 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
                       width: size.width - 150,
                       child: TextFormField(
                         cursorColor: secondaryVariant,
+                        controller: _codeController,
                         style: Theme.of(context)
                             .primaryTextTheme
                             .bodyText2!
@@ -369,7 +387,7 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
                       height: size.height / 70,
                     ),
                     ElevatedButton(
-                      onPressed: () => {},
+                      onPressed: () => verifyOtp(),
                       style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
