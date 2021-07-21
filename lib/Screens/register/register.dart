@@ -1,11 +1,14 @@
 import 'package:email_auth/email_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
+import 'package:focus_app/Screens/welcome.dart';
+
 import 'package:focus_app/Services/authentication_service.dart';
 import 'package:provider/provider.dart';
 
 class RegisterCredentials extends StatefulWidget {
-  const RegisterCredentials({Key? key}) : super(key: key);
+  final Function? toggleScreen;
+  const RegisterCredentials({Key? key, this.toggleScreen}) : super(key: key);
 
   @override
   _RegisterCredentialsState createState() => _RegisterCredentialsState();
@@ -108,13 +111,6 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Image.asset('assets/pink-button.png',
-                            fit: BoxFit.contain),
-                      ),
                       SizedBox(
                         height: size.height / 50,
                       ),
@@ -433,6 +429,9 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
                         width: size.width - 150,
                         child: TextFormField(
                           cursorColor: secondaryVariant,
+                          validator: (val) => _otpVerified && val!.isNotEmpty
+                              ? null
+                              : 'Please enter and verify the code first',
                           controller: _codeController,
                           style: Theme.of(context)
                               .primaryTextTheme
@@ -521,7 +520,16 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
                               await loginProvider.register(
                                 _emailController!.text.trim(),
                                 _passwordController!.text.trim(),
+                                _usernameController!.text.trim(),
                               );
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (context) => WelcomePageName(
+                              //       username: _usernameController!.text.trim(),
+                              //     ),
+                              //   ),
+                              // );
                             }
                             _otpSent = false;
                             _otpVerified = false;
@@ -544,6 +552,33 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
                                   ),
                           ),
                         ),
+                      ),
+                      SizedBox(
+                        height: size.height / 50,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Already have an account ?',
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .bodyText2!
+                                .copyWith(
+                                  color: secondaryVariant,
+                                ),
+                          ),
+                          TextButton(
+                            onPressed: () => widget.toggleScreen!(),
+                            child: Text(
+                              'Login',
+                              style: Theme.of(context)
+                                  .primaryTextTheme
+                                  .bodyText2!
+                                  .copyWith(color: Colors.amberAccent),
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: size.height / 30,

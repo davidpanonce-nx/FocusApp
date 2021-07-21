@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:focus_app/Components/constants.dart';
-import 'package:focus_app/Screens/login.dart';
-import 'package:focus_app/Screens/register/register.dart';
+
+import 'package:focus_app/wrapper.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({Key? key}) : super(key: key);
@@ -95,10 +95,10 @@ class WelcomePage extends StatelessWidget {
                     flex: 3,
                     child: ElevatedButton(
                       onPressed: () => {
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => RegisterCredentials(),
+                            builder: (context) => Wrapper(),
                           ),
                         ),
                       },
@@ -108,39 +108,11 @@ class WelcomePage extends StatelessWidget {
                           primary: secondaryVariant,
                           minimumSize: Size(350, 0)),
                       child: Text(
-                        'Register',
+                        'Continue',
                         style: Theme.of(context)
                             .primaryTextTheme
                             .bodyText2!
                             .copyWith(color: primary),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 15,
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: ElevatedButton(
-                      onPressed: () => {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Login(),
-                          ),
-                        ),
-                      },
-                      style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          primary: primaryVariant,
-                          minimumSize: Size(350, 0)),
-                      child: Text(
-                        'Login',
-                        style: Theme.of(context)
-                            .primaryTextTheme
-                            .bodyText2!
-                            .copyWith(color: secondaryVariant),
                       ),
                     ),
                   ),

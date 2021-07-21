@@ -7,6 +7,7 @@ import 'package:focus_app/Screens/introductory/notetaking.dart';
 import 'package:focus_app/Screens/introductory/rankingsystem.dart';
 import 'package:focus_app/Screens/introductory/ticktock.dart';
 import 'package:focus_app/Screens/introductory/worksmart.dart';
+
 import 'package:focus_app/Screens/registerlogin.dart';
 
 class PageViewIntro extends StatefulWidget {

@@ -3,10 +3,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
 import 'package:focus_app/Screens/pageView.dart';
+
 import 'package:focus_app/Services/authentication_service.dart';
+
 import 'package:provider/provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(FocusApp());
 }
 
@@ -26,16 +29,18 @@ class FocusApp extends StatelessWidget {
                   value: AuthServices(),
                 ),
                 StreamProvider<User?>.value(
-                  value: AuthServices().user,
-                  initialData: null,
-                ),
+                    value: AuthServices().user,
+                    initialData: null,
+                    catchError: (context, error) => null),
               ],
               child: MaterialApp(
                 title: 'Focus App',
                 theme: _buildFocusTheme(),
                 debugShowCheckedModeBanner: false,
                 home: SafeArea(
-                  child: FocusHomepage(title: 'Focus App'),
+                  child: FocusHomepage(
+                    title: 'Focus App',
+                  ),
                 ),
               ),
             );
@@ -64,8 +69,9 @@ class Loading extends StatelessWidget {
 class ErrorWidget extends StatelessWidget {
   const ErrorWidget({
     Key? key,
+    this.error,
   }) : super(key: key);
-
+  final String? error;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,7 +79,7 @@ class ErrorWidget extends StatelessWidget {
         child: Column(
           children: [
             Icon(Icons.error),
-            Text("Something went wrong"),
+            Text("Something went wrong. ${error!}"),
           ],
         ),
       ),

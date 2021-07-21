@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
+import 'package:focus_app/Screens/mainDashboard.dart';
+import 'package:focus_app/wrapper.dart';
 
 class WelcomePageName extends StatelessWidget {
-  const WelcomePageName({Key? key}) : super(key: key);
+  final String? username;
+  const WelcomePageName({Key? key, this.username}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,7 @@ class WelcomePageName extends StatelessWidget {
                     height: size.height / 50,
                   ),
                   Text(
-                    'WELCOME\nJOHN!',
+                    'WELCOME\n${username!}!',
                     style:
                         Theme.of(context).primaryTextTheme.headline1!.copyWith(
                               fontSize: 30.0,
@@ -56,7 +59,14 @@ class WelcomePageName extends StatelessWidget {
                     height: size.height / 100,
                   ),
                   ElevatedButton(
-                    onPressed: () => {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Dashboard(),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),

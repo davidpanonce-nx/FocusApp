@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
+
 import 'package:focus_app/Services/authentication_service.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  final Function? toggleScreen;
+  const Login({Key? key, this.toggleScreen}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
@@ -39,7 +41,9 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     final loginProvider = Provider.of<AuthServices>(context);
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentScope = FocusScope.of(context);
@@ -68,13 +72,6 @@ class _LoginState extends State<Login> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: Image.asset('assets/pink-button.png',
-                            height: size.height / 20, fit: BoxFit.contain),
-                      ),
                       SizedBox(
                         height: size.height / 30,
                       ),
@@ -213,7 +210,6 @@ class _LoginState extends State<Login> {
                       ElevatedButton(
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            print("Email: ${_emailController!.text}");
                             await loginProvider.login(
                               _emailController!.text.trim(),
                               _passwordController!.text.trim(),
@@ -237,6 +233,33 @@ class _LoginState extends State<Login> {
                                       .copyWith(color: primary),
                                 ),
                         ),
+                      ),
+                      SizedBox(
+                        height: size.height / 30,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Don\'t have an account ?',
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .bodyText2!
+                                .copyWith(
+                                  color: secondaryVariant,
+                                ),
+                          ),
+                          TextButton(
+                            onPressed: () => widget.toggleScreen!(),
+                            child: Text(
+                              'Register',
+                              style: Theme.of(context)
+                                  .primaryTextTheme
+                                  .bodyText2!
+                                  .copyWith(color: Colors.amberAccent),
+                            ),
+                          ),
+                        ],
                       ),
                       SizedBox(
                         height: size.height / 30,
