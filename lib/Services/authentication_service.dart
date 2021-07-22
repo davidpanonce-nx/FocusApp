@@ -55,6 +55,20 @@ class AuthServices with ChangeNotifier {
     await firebaseAuth.signOut();
   }
 
+  //cant delete yet because user needs to reauthenticate
+  //make a reauth function
+  Future deleteUser(String uid) async {
+    try {
+      await firebaseAuth.currentUser!.delete();
+      await DatabaseService(uid: uid).deleteUser();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        print(
+            'The user must reauthenticate before this operation can be executed.');
+      }
+    }
+  }
+
   void setLoading(val) {
     _isLoading = val;
     notifyListeners();

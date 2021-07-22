@@ -19,6 +19,7 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   TextEditingController? _usernameController;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -40,30 +41,159 @@ class _DashboardState extends State<Dashboard> {
     Navigator.of(context).pop();
   }
 
-  _displayDialog(BuildContext context) async {
+  _displayDialogEditUsername(BuildContext context) async {
     final updateProvider = Provider.of<DatabaseService>(context, listen: false);
     final user = FirebaseAuth.instance.currentUser;
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text('Edit Your Username'),
-            content: TextField(
-              controller: _usernameController,
-              decoration:
-                  InputDecoration(hintText: "Please enter username here"),
+            backgroundColor: secondaryVariant,
+            title: Text(
+              'New Username',
+              style: Theme.of(context)
+                  .primaryTextTheme
+                  .headline1!
+                  .copyWith(color: primary),
             ),
+            content:
+                Consumer<DatabaseService>(builder: (context, value, child) {
+              return Form(
+                key: _formKey,
+                child: TextFormField(
+                  validator: (val) =>
+                      val!.isNotEmpty ? null : "Username can't be blank",
+                  controller: _usernameController,
+                  onChanged: (val) {
+                    if (_usernameController!.text.isEmpty) {
+                      value.setFalse();
+                    } else {
+                      value.setTrue();
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: "Please enter username here",
+                    hintStyle:
+                        Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                              color: primaryVariant,
+                              fontWeight: FontWeight.w500,
+                            ),
+                    suffixIcon: value.hastText
+                        ? IconButton(
+                            color: primary,
+                            onPressed: () {
+                              value.setFalse();
+                              _usernameController!.clear();
+                            },
+                            icon: Icon(Icons.close),
+                          )
+                        : null,
+                  ),
+                ),
+              );
+            }),
+            contentTextStyle:
+                Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                      color: primaryVariant,
+                      fontWeight: FontWeight.w500,
+                    ),
             actions: <Widget>[
               new ElevatedButton(
-                child: new Text('SAVE'),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  primary: primary,
+                ),
+                child: new Text(
+                  'Save',
+                  style: Theme.of(context)
+                      .primaryTextTheme
+                      .bodyText2!
+                      .copyWith(color: secondaryVariant),
+                ),
                 onPressed: () async {
-                  updateProvider.updateUsername(
-                    user!.uid,
-                    _usernameController!.text.trim(),
-                  );
-                  Navigator.of(context).pop();
-                  _usernameController!.clear();
+                  if (_formKey.currentState!.validate()) {
+                    updateProvider.updateUsername(
+                      user!.uid,
+                      _usernameController!.text.trim(),
+                    );
+                    Navigator.of(context).pop();
+                    _usernameController!.clear();
+                  }
                 },
+              )
+            ],
+          );
+        });
+  }
+
+  _displayDialogDeleteUser(BuildContext context) async {
+    final _authService = Provider.of<AuthServices>(context, listen: false);
+    final user = FirebaseAuth.instance.currentUser;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: secondaryVariant,
+            title: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(text: 'Are you sure you want to'),
+                  TextSpan(
+                    text: ' delete ',
+                    style: Theme.of(context)
+                        .primaryTextTheme
+                        .headline1!
+                        .copyWith(color: Colors.redAccent, fontSize: 20),
+                  ),
+                  TextSpan(text: 'your account ?'),
+                ],
+                style: Theme.of(context)
+                    .primaryTextTheme
+                    .headline1!
+                    .copyWith(color: primary, fontSize: 20),
+              ),
+              textAlign: TextAlign.center,
+            ),
+            actions: <Widget>[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  new ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      primary: primary,
+                    ),
+                    child: new Text(
+                      'No',
+                      style: Theme.of(context)
+                          .primaryTextTheme
+                          .bodyText2!
+                          .copyWith(color: secondaryVariant),
+                    ),
+                    onPressed: () async {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                  new ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                      primary: Colors.redAccent,
+                    ),
+                    child: new Text(
+                      'Yes',
+                      style: Theme.of(context)
+                          .primaryTextTheme
+                          .bodyText2!
+                          .copyWith(color: secondaryVariant),
+                    ),
+                    onPressed: () async {
+                      await _authService.deleteUser(user!.uid);
+                    },
+                  ),
+                ],
               )
             ],
           );
@@ -141,7 +271,7 @@ class _DashboardState extends State<Dashboard> {
                     color: primary,
                     child: ListTile(
                       onTap: () {
-                        _displayDialog(context);
+                        _displayDialogEditUsername(context);
                       },
                       leading: Icon(
                         Icons.person,
@@ -185,6 +315,7 @@ class _DashboardState extends State<Dashboard> {
                   Card(
                     color: primary,
                     child: ListTile(
+                      onTap: () => _displayDialogDeleteUser(context),
                       leading: Icon(
                         Icons.delete,
                         color: secondaryVariant,

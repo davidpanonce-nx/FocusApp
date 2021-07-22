@@ -21,12 +21,34 @@ class DatabaseService extends ChangeNotifier {
     );
   }
 
+  bool _hasText = false;
+
+  bool get hastText => _hasText;
+
+  void setTrue() {
+    _hasText = true;
+    notifyListeners();
+  }
+
+  void setFalse() {
+    _hasText = false;
+    notifyListeners();
+  }
+
   Future<void> updateUsername(String uid, String username) {
     return focusCollection
         .doc(uid)
         .update({'username': username})
         .then((value) => print("Username updated"))
         .catchError((error) => print("Failed to update username: $error"));
+  }
+
+  Future<void> deleteUser() {
+    return focusCollection
+        .doc(uid)
+        .delete()
+        .then((value) => print("User Deleted"))
+        .catchError((error) => print("Failed to delete user: $error"));
   }
 
   // // focus users from snapshot
