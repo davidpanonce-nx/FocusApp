@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
 import 'package:focus_app/Screens/mainDashboard.dart';
-import 'package:focus_app/wrapper.dart';
 
 class WelcomePageName extends StatelessWidget {
   final String? username;

@@ -2,9 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
+
 import 'package:focus_app/Screens/pageView.dart';
 
 import 'package:focus_app/Services/authentication_service.dart';
+import 'package:focus_app/Services/database_service.dart';
 
 import 'package:provider/provider.dart';
 
@@ -29,9 +31,17 @@ class FocusApp extends StatelessWidget {
                   value: AuthServices(),
                 ),
                 StreamProvider<User?>.value(
-                    value: AuthServices().user,
-                    initialData: null,
-                    catchError: (context, error) => null),
+                  value: AuthServices().user,
+                  initialData: null,
+                  catchError: (context, error) => null,
+                ),
+                ChangeNotifierProvider<DatabaseService>.value(
+                  value: DatabaseService(),
+                ),
+                // StreamProvider<List<FocusUser>>.value(
+                //   initialData: [],
+                //   value: DatabaseService().focuser,
+                // ),
               ],
               child: MaterialApp(
                 title: 'Focus App',

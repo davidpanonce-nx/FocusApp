@@ -1,7 +1,6 @@
 import 'package:email_auth/email_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
-import 'package:focus_app/Screens/welcome.dart';
 
 import 'package:focus_app/Services/authentication_service.dart';
 import 'package:provider/provider.dart';

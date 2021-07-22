@@ -1,7 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
 import 'package:focus_app/Components/constants.dart';
+import 'package:focus_app/Models/models.dart';
 
 import 'package:focus_app/Services/authentication_service.dart';
+import 'package:focus_app/Services/database_service.dart';
+
 import 'package:provider/provider.dart';
 
 class Dashboard extends StatefulWidget {
@@ -13,6 +18,19 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
+  TextEditingController? _usernameController;
+
+  @override
+  void initState() {
+    _usernameController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _usernameController!.dispose();
+    super.dispose();
+  }
 
   void _openDrawer() {
     _scaffoldkey.currentState!.openDrawer();
@@ -22,10 +40,42 @@ class _DashboardState extends State<Dashboard> {
     Navigator.of(context).pop();
   }
 
+  _displayDialog(BuildContext context) async {
+    final updateProvider = Provider.of<DatabaseService>(context, listen: false);
+    final user = FirebaseAuth.instance.currentUser;
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Edit Your Username'),
+            content: TextField(
+              controller: _usernameController,
+              decoration:
+                  InputDecoration(hintText: "Please enter username here"),
+            ),
+            actions: <Widget>[
+              new ElevatedButton(
+                child: new Text('SAVE'),
+                onPressed: () async {
+                  updateProvider.updateUsername(
+                    user!.uid,
+                    _usernameController!.text.trim(),
+                  );
+                  Navigator.of(context).pop();
+                  _usernameController!.clear();
+                },
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final loginProvider = Provider.of<AuthServices>(context);
+    final user = FirebaseAuth.instance.currentUser;
+
     return SafeArea(
       child: Scaffold(
         key: _scaffoldkey,
@@ -46,13 +96,148 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   SizedBox(
-                    height: 20,
+                    height: 5,
                   ),
-                  IconButton(
-                    onPressed: () async {
-                      await loginProvider.logout();
+                  Container(
+                    width: size.width / 3.5,
+                    height: size.width / 3.5,
+                    clipBehavior: Clip.antiAlias,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                    ),
+                    child: Image.asset('assets/icon.png'),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Center(
+                    child: StreamBuilder<FocusUserData>(
+                      stream: DatabaseService(uid: user!.uid).userData,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          FocusUserData data = snapshot.data!;
+                          return Text(
+                            data.username!,
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .bodyText2!
+                                .copyWith(
+                                    color: secondaryVariant, fontSize: 18),
+                          );
+                        } else {
+                          return CircularProgressIndicator();
+                        }
+                      },
+                    ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Divider(
+                    color: primary,
+                    height: 0,
+                  ),
+                  Card(
+                    color: primary,
+                    child: ListTile(
+                      onTap: () {
+                        _displayDialog(context);
+                      },
+                      leading: Icon(
+                        Icons.person,
+                        color: secondaryVariant,
+                      ),
+                      title: Text(
+                        'Edit Username',
+                        style: Theme.of(context)
+                            .primaryTextTheme
+                            .bodyText2!
+                            .copyWith(color: secondaryVariant),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: primary,
+                    height: 0,
+                  ),
+                  Card(
+                    color: primary,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.replay,
+                        color: secondaryVariant,
+                      ),
+                      title: Text(
+                        'Reset Password',
+                        style: Theme.of(context)
+                            .primaryTextTheme
+                            .bodyText2!
+                            .copyWith(
+                              color: secondaryVariant,
+                            ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: primary,
+                    height: 0,
+                  ),
+                  Card(
+                    color: primary,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.delete,
+                        color: secondaryVariant,
+                      ),
+                      title: Text(
+                        'Delete Account',
+                        style: Theme.of(context)
+                            .primaryTextTheme
+                            .bodyText2!
+                            .copyWith(color: secondaryVariant),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: primary,
+                    height: 0,
+                  ),
+                  Card(
+                    color: primary,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.feedback,
+                        color: secondaryVariant,
+                      ),
+                      title: Text(
+                        'Give Feedback',
+                        style: Theme.of(context)
+                            .primaryTextTheme
+                            .bodyText2!
+                            .copyWith(color: secondaryVariant),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    color: primary,
+                    height: 0,
+                  ),
+                  SizedBox(),
+                  ListTile(
+                    leading: Icon(
+                      Icons.logout,
+                      color: secondaryVariant,
+                    ),
+                    title: Text(
+                      'Logout',
+                      style: Theme.of(context)
+                          .primaryTextTheme
+                          .bodyText2!
+                          .copyWith(color: secondaryVariant),
+                    ),
+                    onTap: () async {
+                      loginProvider.logout();
                     },
-                    icon: Icon(Icons.logout),
                   ),
                 ],
               ),

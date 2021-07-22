@@ -20,7 +20,8 @@ class AuthServices with ChangeNotifier {
       setLoading(false);
 
       //create a  new document for each user
-      await DatabaseService(uid: user!.uid).updateUserData(username, '0');
+      await DatabaseService(uid: user!.uid)
+          .updateUserData(username, 0, 'default feedback', 0);
       return user;
     } on SocketException {
       setLoading(false);
