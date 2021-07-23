@@ -19,17 +19,36 @@ class Dashboard extends StatefulWidget {
 class _DashboardState extends State<Dashboard> {
   final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
   TextEditingController? _usernameController;
-  final _formKey = GlobalKey<FormState>();
+  TextEditingController? _emailController;
+  TextEditingController? _passwordController;
+  TextEditingController? _newPasswordController;
+  TextEditingController? _newPasswordReController;
+  TextEditingController? _feedBackController;
+  final _formKey1 = GlobalKey<FormState>();
+  final _formKey2 = GlobalKey<FormState>();
+  final _formKey3 = GlobalKey<FormState>();
+  final _formKey4 = GlobalKey<FormState>();
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
     _usernameController = TextEditingController();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _newPasswordController = TextEditingController();
+    _newPasswordReController = TextEditingController();
+    _feedBackController = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
     _usernameController!.dispose();
+    _emailController!.dispose();
+    _passwordController!.dispose();
+    _newPasswordController!.dispose();
+    _newPasswordReController!.dispose();
+    _feedBackController!.dispose();
     super.dispose();
   }
 
@@ -41,9 +60,10 @@ class _DashboardState extends State<Dashboard> {
     Navigator.of(context).pop();
   }
 
+  //Alert Dialog for editing username
   _displayDialogEditUsername(BuildContext context) async {
     final updateProvider = Provider.of<DatabaseService>(context, listen: false);
-    final user = FirebaseAuth.instance.currentUser;
+
     return showDialog(
         context: context,
         builder: (context) {
@@ -59,7 +79,7 @@ class _DashboardState extends State<Dashboard> {
             content:
                 Consumer<DatabaseService>(builder: (context, value, child) {
               return Form(
-                key: _formKey,
+                key: _formKey1,
                 child: TextFormField(
                   validator: (val) =>
                       val!.isNotEmpty ? null : "Username can't be blank",
@@ -112,13 +132,13 @@ class _DashboardState extends State<Dashboard> {
                       .copyWith(color: secondaryVariant),
                 ),
                 onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
+                  if (_formKey1.currentState!.validate()) {
                     updateProvider.updateUsername(
                       user!.uid,
                       _usernameController!.text.trim(),
                     );
-                    Navigator.of(context).pop();
                     _usernameController!.clear();
+                    Navigator.of(context).pop();
                   }
                 },
               )
@@ -127,9 +147,10 @@ class _DashboardState extends State<Dashboard> {
         });
   }
 
+  //Alert Dialog for Deleting Account
   _displayDialogDeleteUser(BuildContext context) async {
     final _authService = Provider.of<AuthServices>(context, listen: false);
-    final user = FirebaseAuth.instance.currentUser;
+
     return showDialog(
         context: context,
         builder: (context) {
@@ -191,6 +212,12 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     onPressed: () async {
                       await _authService.deleteUser(user!.uid);
+                      _authService.recentLogin
+                          ? print('User data and account deleted')
+                          : _displayDialogReAuth(context);
+                      if (_authService.deleteSucess) {
+                        Navigator.of(context).pop();
+                      }
                     },
                   ),
                 ],
@@ -200,11 +227,566 @@ class _DashboardState extends State<Dashboard> {
         });
   }
 
+  //Alert Dialog for Reauthenticating
+  _displayDialogReAuth(BuildContext context) async {
+    final _authService = Provider.of<AuthServices>(context, listen: false);
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: secondaryVariant,
+          title: Text(
+            'Reauthenticate',
+            style: Theme.of(context)
+                .primaryTextTheme
+                .headline1!
+                .copyWith(color: Colors.redAccent),
+            textAlign: TextAlign.center,
+          ),
+          content: Consumer<DatabaseService>(builder: (context, value, child) {
+            return Form(
+              key: _formKey2,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Email',
+                    style:
+                        Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                              color: primary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  TextFormField(
+                    controller: _emailController,
+                    validator: (val) => val!.isNotEmpty
+                        ? null
+                        : "Please enter an email address",
+                    onChanged: (val) {
+                      if (_emailController!.text.isEmpty) {
+                        value.setFalse();
+                      } else {
+                        value.setTrue();
+                      }
+                    },
+                    cursorColor: primary,
+                    style:
+                        Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                              color: primary,
+                              fontWeight: FontWeight.w300,
+                            ),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.email,
+                        color: primaryVariant,
+                        size: 20,
+                      ),
+                      errorStyle: TextStyle(color: Colors.redAccent),
+                      labelText: "Enter email here",
+                      labelStyle: Theme.of(context)
+                          .primaryTextTheme
+                          .bodyText2!
+                          .copyWith(
+                            color: primaryVariant,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 12,
+                          ),
+                      suffixIcon: value.hastText
+                          ? IconButton(
+                              color: primary,
+                              onPressed: () {
+                                value.setFalse();
+                                _emailController!.clear();
+                              },
+                              iconSize: 20,
+                              icon: Icon(Icons.close),
+                            )
+                          : null,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: greenVariant),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.amberAccent)),
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.amberAccent)),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Password',
+                    style:
+                        Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                              color: primary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: value.obscureText,
+                    validator: (val) =>
+                        val!.isNotEmpty ? null : "Please enter a password",
+                    cursorColor: secondaryVariant,
+                    style:
+                        Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                              color: primary,
+                              fontWeight: FontWeight.w300,
+                            ),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.password,
+                        color: primaryVariant,
+                        size: 20,
+                      ),
+                      errorStyle: TextStyle(color: Colors.redAccent),
+                      labelText: "Enter password here",
+                      labelStyle: Theme.of(context)
+                          .primaryTextTheme
+                          .bodyText2!
+                          .copyWith(
+                            color: primaryVariant,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 12,
+                          ),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          value.toggleObscure();
+                        },
+                        icon: value.obscureText
+                            ? Icon(Icons.visibility_off)
+                            : Icon(Icons.visibility),
+                        color: primary,
+                        iconSize: 20,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: greenVariant),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.amberAccent)),
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.amberAccent)),
+                    ),
+                  ),
+                  // if (_authService.reauthErrorMessage != '')
+                  //   Text(_authService.reauthErrorMessage),
+                ],
+              ),
+            );
+          }),
+          contentTextStyle:
+              Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                    color: primaryVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                new ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    primary: primary,
+                  ),
+                  child: new Text(
+                    'Cancel',
+                    style: Theme.of(context)
+                        .primaryTextTheme
+                        .bodyText2!
+                        .copyWith(color: secondaryVariant),
+                  ),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    primary: Colors.redAccent,
+                  ),
+                  child: new Text(
+                    'Continue',
+                    style: Theme.of(context)
+                        .primaryTextTheme
+                        .bodyText2!
+                        .copyWith(color: secondaryVariant),
+                  ),
+                  onPressed: () async {
+                    if (_formKey2.currentState!.validate()) {
+                      await _authService.reAuthenticate(
+                        _emailController!.text.trim(),
+                        _passwordController!.text.trim(),
+                      );
+                      if (_authService.reAuthSucces) {
+                        _emailController!.clear();
+                        _passwordController!.clear();
+                        Navigator.of(context).pop();
+                      }
+                    }
+                  },
+                ),
+              ],
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  //Alert Dialog for Reset Password
+  _displayDialogResetPassword(BuildContext context) async {
+    final _authService = Provider.of<AuthServices>(context, listen: false);
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: secondaryVariant,
+          title: Text(
+            'Reset Password',
+            style: Theme.of(context)
+                .primaryTextTheme
+                .headline1!
+                .copyWith(color: primary),
+            textAlign: TextAlign.center,
+          ),
+          content: Consumer<DatabaseService>(builder: (context, value, child) {
+            return Form(
+              key: _formKey3,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'New Password',
+                    style:
+                        Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                              color: primary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  TextFormField(
+                    controller: _newPasswordController,
+                    obscureText: value.obscureNewText1,
+                    validator: (val) =>
+                        val!.isNotEmpty ? null : "Please enter new password",
+                    cursorColor: secondaryVariant,
+                    style:
+                        Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                              color: primary,
+                              fontWeight: FontWeight.w300,
+                            ),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.password,
+                        color: primaryVariant,
+                        size: 20,
+                      ),
+                      errorStyle: TextStyle(color: Colors.redAccent),
+                      labelText: "Enter new password here",
+                      labelStyle: Theme.of(context)
+                          .primaryTextTheme
+                          .bodyText2!
+                          .copyWith(
+                            color: primaryVariant,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 12,
+                          ),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          value.toggleNewObscure1();
+                        },
+                        icon: value.obscureNewText1
+                            ? Icon(Icons.visibility_off)
+                            : Icon(Icons.visibility),
+                        color: primary,
+                        iconSize: 20,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: greenVariant),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.amberAccent)),
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.amberAccent)),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Re-Enter New Password',
+                    style:
+                        Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                              color: primary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  TextFormField(
+                    controller: _newPasswordReController,
+                    obscureText: value.obscureNewText2,
+                    validator: (val) =>
+                        val != _newPasswordController!.text.trim()
+                            ? "Password doesn't match"
+                            : null,
+                    cursorColor: secondaryVariant,
+                    style:
+                        Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                              color: primary,
+                              fontWeight: FontWeight.w300,
+                            ),
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(
+                        Icons.password,
+                        color: primaryVariant,
+                        size: 20,
+                      ),
+                      errorStyle: TextStyle(color: Colors.redAccent),
+                      labelText: "Re-enter new password here",
+                      labelStyle: Theme.of(context)
+                          .primaryTextTheme
+                          .bodyText2!
+                          .copyWith(
+                            color: primaryVariant,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 12,
+                          ),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          value.toggleNewObscure2();
+                        },
+                        icon: value.obscureNewText2
+                            ? Icon(Icons.visibility_off)
+                            : Icon(Icons.visibility),
+                        color: primary,
+                        iconSize: 20,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: greenVariant),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey)),
+                      errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.amberAccent)),
+                      focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.amberAccent)),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }),
+          contentTextStyle:
+              Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                    color: primaryVariant,
+                    fontWeight: FontWeight.w500,
+                  ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                new ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    primary: primary,
+                  ),
+                  child: new Text(
+                    'Cancel',
+                    style: Theme.of(context)
+                        .primaryTextTheme
+                        .bodyText2!
+                        .copyWith(color: secondaryVariant),
+                  ),
+                  onPressed: () async {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    primary: Colors.redAccent,
+                  ),
+                  child: new Text(
+                    'Continue',
+                    style: Theme.of(context)
+                        .primaryTextTheme
+                        .bodyText2!
+                        .copyWith(color: secondaryVariant),
+                  ),
+                  onPressed: () async {
+                    if (_formKey3.currentState!.validate()) {
+                      await _authService
+                          .updatePassword(_newPasswordController!.text.trim());
+                      _authService.recentLogin
+                          ? print('Done')
+                          : _displayDialogReAuth(context);
+                      if (_authService.resetPasswordSuccess) {
+                        _newPasswordController!.clear();
+                        _newPasswordReController!.clear();
+                        Navigator.of(context).pop();
+                      }
+                    }
+                  },
+                ),
+              ],
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  //Alert dialog for Give Feedback
+  _displayDialogFeedBack(BuildContext context) async {
+    final updateProvider = Provider.of<DatabaseService>(context, listen: false);
+
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: secondaryVariant,
+            title: Text(
+              'We value your feedback',
+              style: Theme.of(context)
+                  .primaryTextTheme
+                  .headline1!
+                  .copyWith(color: primary),
+              textAlign: TextAlign.center,
+            ),
+            content:
+                Consumer<DatabaseService>(builder: (context, value, child) {
+              return Form(
+                key: _formKey4,
+                child: TextFormField(
+                  minLines: 5,
+                  maxLines: 10,
+                  validator: (val) =>
+                      val!.isNotEmpty ? null : "Feedback can't be blank",
+                  controller: _feedBackController,
+                  decoration: InputDecoration(
+                    hintText: "Type here",
+                    hintStyle:
+                        Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                              color: primaryVariant,
+                              fontWeight: FontWeight.w500,
+                            ),
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey)),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: primaryVariant),
+                    ),
+                    errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent)),
+                    focusedErrorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.redAccent)),
+                  ),
+                ),
+              );
+            }),
+            contentTextStyle:
+                Theme.of(context).primaryTextTheme.bodyText2!.copyWith(
+                      color: primary,
+                      fontWeight: FontWeight.w500,
+                    ),
+            actions: <Widget>[
+              new ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  primary: Colors.redAccent,
+                ),
+                child: new Text(
+                  'Submit',
+                  style: Theme.of(context)
+                      .primaryTextTheme
+                      .bodyText2!
+                      .copyWith(color: secondaryVariant),
+                ),
+                onPressed: () async {
+                  if (_formKey4.currentState!.validate()) {
+                    updateProvider.updateFeedback(
+                      user!.uid,
+                      _feedBackController!.text.trim(),
+                    );
+                    _feedBackController!.clear();
+                    Navigator.of(context).pop();
+                  }
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  //Alert Dialog For feedback which was already done
+  _displayDialogFeedBackCheck(BuildContext context) async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            backgroundColor: secondaryVariant,
+            title: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(text: 'You already provided us with your feedback.'),
+                  TextSpan(
+                    text: ' Thank You !',
+                    style: Theme.of(context)
+                        .primaryTextTheme
+                        .headline1!
+                        .copyWith(color: Colors.redAccent, fontSize: 20),
+                  ),
+                ],
+                style: Theme.of(context)
+                    .primaryTextTheme
+                    .headline1!
+                    .copyWith(color: primary, fontSize: 20),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final loginProvider = Provider.of<AuthServices>(context);
-    final user = FirebaseAuth.instance.currentUser;
+    final updateProvider = Provider.of<DatabaseService>(context, listen: false);
 
     return SafeArea(
       child: Scaffold(
@@ -293,6 +875,9 @@ class _DashboardState extends State<Dashboard> {
                   Card(
                     color: primary,
                     child: ListTile(
+                      onTap: () {
+                        _displayDialogResetPassword(context);
+                      },
                       leading: Icon(
                         Icons.replay,
                         color: secondaryVariant,
@@ -336,6 +921,15 @@ class _DashboardState extends State<Dashboard> {
                   Card(
                     color: primary,
                     child: ListTile(
+                      onTap: () async {
+                        var feedback =
+                            await updateProvider.getFeedBack(user!.uid);
+                        if (feedback != 'default feedback') {
+                          _displayDialogFeedBackCheck(context);
+                        } else {
+                          _displayDialogFeedBack(context);
+                        }
+                      },
                       leading: Icon(
                         Icons.feedback,
                         color: secondaryVariant,
