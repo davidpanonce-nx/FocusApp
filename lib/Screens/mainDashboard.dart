@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 
 import 'package:focus_app/Components/constants.dart';
 import 'package:focus_app/Models/models.dart';
+import 'package:focus_app/Screens/Main%20Features/Timer/timer.dart';
 
 import 'package:focus_app/Services/authentication_service.dart';
 import 'package:focus_app/Services/database_service.dart';
 
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -30,6 +32,15 @@ class _DashboardState extends State<Dashboard> {
   final _formKey4 = GlobalKey<FormState>();
   final user = FirebaseAuth.instance.currentUser;
 
+  int seconds = 0;
+  int minutes = 0;
+  int pomos = 0;
+  int breakMinutes = 0;
+  bool water = true;
+  bool ergo = true;
+  bool food = true;
+  bool bio = true;
+
   @override
   void initState() {
     _usernameController = TextEditingController();
@@ -38,6 +49,8 @@ class _DashboardState extends State<Dashboard> {
     _newPasswordController = TextEditingController();
     _newPasswordReController = TextEditingController();
     _feedBackController = TextEditingController();
+    setValues();
+
     super.initState();
   }
 
@@ -58,6 +71,27 @@ class _DashboardState extends State<Dashboard> {
 
   void _closeDrawer() {
     Navigator.of(context).pop();
+  }
+
+  void setValues() async {
+    seconds = await DatabaseService().getSeconds(user!.uid);
+    minutes = await DatabaseService().getMinutes(user!.uid);
+    pomos = await DatabaseService().getPomos(user!.uid);
+    breakMinutes = await DatabaseService().getBreakMinutes(user!.uid);
+    water = await DatabaseService().getWaterBreak(user!.uid);
+    ergo = await DatabaseService().getErgonomicBreak(user!.uid);
+    food = await DatabaseService().getFoodBreak(user!.uid);
+    bio = await DatabaseService().getBioBreak(user!.uid);
+    SharedPreferences? _pref = await SharedPreferences.getInstance();
+    _pref.setInt("seconds", seconds);
+    _pref.setInt("minutes", minutes);
+    _pref.setInt("pomos", pomos);
+    _pref.setInt("pomoCounter", 0);
+    _pref.setInt("breakMinutes", breakMinutes);
+    _pref.setBool('water', water);
+    _pref.setBool('ergo', ergo);
+    _pref.setBool('food', food);
+    _pref.setBool('bio', bio);
   }
 
   //Alert Dialog for editing username
@@ -673,7 +707,6 @@ class _DashboardState extends State<Dashboard> {
   //Alert dialog for Give Feedback
   _displayDialogFeedBack(BuildContext context) async {
     final updateProvider = Provider.of<DatabaseService>(context, listen: false);
-
     return showDialog(
         context: context,
         builder: (context) {
@@ -1003,9 +1036,17 @@ class _DashboardState extends State<Dashboard> {
                       Expanded(
                         child: Column(
                           children: [
-                            Image.asset(
-                              'assets/Timer.png',
-                              width: size.width / 4.5,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PomodoroTimer()));
+                              },
+                              child: Image.asset(
+                                'assets/Timer.png',
+                                width: size.width / 4.5,
+                              ),
                             ),
                             SizedBox(
                               height: 10,
@@ -1026,9 +1067,12 @@ class _DashboardState extends State<Dashboard> {
                       Expanded(
                         child: Column(
                           children: [
-                            Image.asset(
-                              'assets/Notes.png',
-                              width: size.width / 5,
+                            GestureDetector(
+                              onTap: () {},
+                              child: Image.asset(
+                                'assets/Notes.png',
+                                width: size.width / 5,
+                              ),
                             ),
                             SizedBox(
                               height: 10,
@@ -1053,9 +1097,12 @@ class _DashboardState extends State<Dashboard> {
                       Expanded(
                         child: Column(
                           children: [
-                            Image.asset(
-                              'assets/Trophy.png',
-                              width: size.width / 5,
+                            GestureDetector(
+                              onTap: () {},
+                              child: Image.asset(
+                                'assets/Trophy.png',
+                                width: size.width / 5,
+                              ),
                             ),
                             SizedBox(
                               height: 10,
@@ -1076,9 +1123,12 @@ class _DashboardState extends State<Dashboard> {
                       Expanded(
                         child: Column(
                           children: [
-                            Image.asset(
-                              'assets/NotifBlock.png',
-                              width: size.width / 4,
+                            GestureDetector(
+                              onTap: () {},
+                              child: Image.asset(
+                                'assets/NotifBlock.png',
+                                width: size.width / 4,
+                              ),
                             ),
                             SizedBox(
                               height: 10,
@@ -1101,9 +1151,12 @@ class _DashboardState extends State<Dashboard> {
                     padding: const EdgeInsets.only(top: 20),
                     child: Column(
                       children: [
-                        Image.asset(
-                          'assets/Custom.png',
-                          width: size.width / 5,
+                        GestureDetector(
+                          onTap: () {},
+                          child: Image.asset(
+                            'assets/Custom.png',
+                            width: size.width / 5,
+                          ),
                         ),
                         SizedBox(
                           height: 10,

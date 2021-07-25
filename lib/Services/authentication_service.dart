@@ -31,7 +31,10 @@ class AuthServices with ChangeNotifier {
 
       //create a  new document for each user
       await DatabaseService(uid: user!.uid)
-          .updateUserData(username, 0, 'default feedback', 0);
+          .setInitialUserData(username, 0, 'default feedback', 0);
+      await DatabaseService(uid: user.uid)
+          .setInitialSettings(4, 25, 0, 5, true, true, true, true);
+
       return user;
     } on SocketException {
       setLoading(false);
@@ -73,6 +76,7 @@ class AuthServices with ChangeNotifier {
       setRecentLogin(true);
       await firebaseAuth.currentUser!.delete();
       await DatabaseService(uid: uid).deleteUser();
+      await DatabaseService(uid: uid).deleteUserSettings();
       setSucessDelete(true);
     } on FirebaseAuthException catch (e) {
       setRecentLogin(false);

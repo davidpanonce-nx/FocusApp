@@ -30,6 +30,7 @@ dependencies:
   firebase_core: ^1.4.0
   flutter_svg: ^0.22.0
   lint: ^1.5.3
+  percent_indicator: ^3.0.1
   provider: ^5.0.0
   shared_preferences: ^2.0.6
 
@@ -67,6 +68,8 @@ flutter:
     - assets/logo1.png
     - assets/stack-2.png
     - assets/pink-button.png
+    - assets/Blue-button.png
+    - assets/Blue-ButtonInverted.png
     - assets/Logo.png
     - assets/stack-3.png
     - assets/Welcome-01.png
@@ -78,6 +81,16 @@ flutter:
     - assets/NotifBlock.png
     - assets/Custom.png
     - assets/icon.png
+    - assets/clockBg.png
+    - assets/EDIT.png
+    - assets/PAUSE.png
+    - assets/PLAY.png
+    - assets/STOP.png
+    - assets/waterbreak.png
+    - assets/ergobreak.png
+    - assets/foodbreak.png
+    - assets/biobreak.png
+    - assets/breakbg.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

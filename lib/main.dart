@@ -38,19 +38,13 @@ class FocusApp extends StatelessWidget {
                 ChangeNotifierProvider<DatabaseService>.value(
                   value: DatabaseService(),
                 ),
-                // StreamProvider<List<FocusUser>>.value(
-                //   initialData: [],
-                //   value: DatabaseService().focuser,
-                // ),
               ],
               child: MaterialApp(
                 title: 'Focus App',
                 theme: _buildFocusTheme(),
                 debugShowCheckedModeBanner: false,
-                home: SafeArea(
-                  child: FocusHomepage(
-                    title: 'Focus App',
-                  ),
+                home: FocusHomepage(
+                  title: 'Focus App',
                 ),
               ),
             );
