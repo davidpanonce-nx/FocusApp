@@ -83,11 +83,11 @@ class _DashboardState extends State<Dashboard> {
     food = await DatabaseService().getFoodBreak(user!.uid);
     bio = await DatabaseService().getBioBreak(user!.uid);
     SharedPreferences? _pref = await SharedPreferences.getInstance();
-    _pref.setInt("seconds", seconds);
-    _pref.setInt("minutes", minutes);
-    _pref.setInt("pomos", pomos);
-    _pref.setInt("pomoCounter", 0);
-    _pref.setInt("breakMinutes", breakMinutes);
+    _pref.setInt('seconds', seconds);
+    _pref.setInt('minutes', minutes);
+    _pref.setInt('pomos', pomos);
+    _pref.setInt('pomoCounter', 0);
+    _pref.setInt('breakMinutes', breakMinutes);
     _pref.setBool('water', water);
     _pref.setBool('ergo', ergo);
     _pref.setBool('food', food);
@@ -995,6 +995,7 @@ class _DashboardState extends State<Dashboard> {
                     ),
                     onTap: () async {
                       loginProvider.logout();
+                      setState(() {});
                     },
                   ),
                 ],

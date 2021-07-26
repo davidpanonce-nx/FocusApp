@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
 import 'package:focus_app/Screens/Main%20Features/Timer/timer.dart';
+import 'package:focus_app/Screens/mainDashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WaterBreak extends StatefulWidget {
@@ -17,6 +18,7 @@ class _WaterBreakState extends State<WaterBreak> {
   int _breakMinutes = 0;
   int start = 0;
   int? pomoCount;
+  bool _clicked = false;
 
   void _startBreakTimer() async {
     const oneSec = const Duration(seconds: 1);
@@ -53,6 +55,7 @@ class _WaterBreakState extends State<WaterBreak> {
 
   @override
   void initState() {
+    _clicked = false;
     getValues();
     super.initState();
   }
@@ -120,12 +123,17 @@ class _WaterBreakState extends State<WaterBreak> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PomodoroTimer()));
-                      },
+                      onPressed: _clicked
+                          ? null
+                          : () {
+                              setState(() {
+                                _clicked = true;
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => PomodoroTimer()));
+                              });
+                            },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
@@ -150,7 +158,9 @@ class _WaterBreakState extends State<WaterBreak> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        _startBreakTimer();
+                        if (_breakMinutes == start) {
+                          _startBreakTimer();
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -193,6 +203,7 @@ class _ErgoBreakState extends State<ErgoBreak> {
   int? breakMinutes;
   int _breakMinutes = 0;
   int start = 0;
+  bool _clicked = false;
 
   void _startBreakTimer() {
     const oneSec = const Duration(seconds: 1);
@@ -229,6 +240,7 @@ class _ErgoBreakState extends State<ErgoBreak> {
 
   @override
   void initState() {
+    _clicked = false;
     getValues();
     super.initState();
   }
@@ -297,12 +309,18 @@ class _ErgoBreakState extends State<ErgoBreak> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PomodoroTimer()));
-                      },
+                      onPressed: _clicked
+                          ? null
+                          : () {
+                              setState(() {
+                                _clicked = true;
+                                _breakMinutes = 0;
+                              });
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PomodoroTimer()));
+                            },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
@@ -327,7 +345,9 @@ class _ErgoBreakState extends State<ErgoBreak> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        _startBreakTimer();
+                        if (_breakMinutes == start) {
+                          _startBreakTimer();
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -370,6 +390,7 @@ class _FoodBreakState extends State<FoodBreak> {
   int? breakMinutes;
   int _breakMinutes = 0;
   int start = 0;
+  bool _clicked = false;
 
   void _startBreakTimer() {
     const oneSec = const Duration(seconds: 1);
@@ -406,6 +427,7 @@ class _FoodBreakState extends State<FoodBreak> {
 
   @override
   void initState() {
+    _clicked = false;
     getValues();
     super.initState();
   }
@@ -474,12 +496,18 @@ class _FoodBreakState extends State<FoodBreak> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PomodoroTimer()));
-                      },
+                      onPressed: _clicked
+                          ? null
+                          : () {
+                              setState(() {
+                                _clicked = true;
+                                _breakMinutes = 0;
+                              });
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PomodoroTimer()));
+                            },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
@@ -504,7 +532,9 @@ class _FoodBreakState extends State<FoodBreak> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        _startBreakTimer();
+                        if (_breakMinutes == start) {
+                          _startBreakTimer();
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -547,6 +577,7 @@ class _BioBreakState extends State<BioBreak> {
   int? breakMinutes;
   int _breakMinutes = 0;
   int start = 0;
+  bool _clicked = false;
 
   void _startBreakTimer() {
     const oneSec = const Duration(seconds: 1);
@@ -583,6 +614,7 @@ class _BioBreakState extends State<BioBreak> {
 
   @override
   void initState() {
+    _clicked = false;
     getValues();
     super.initState();
   }
@@ -651,12 +683,18 @@ class _BioBreakState extends State<BioBreak> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => PomodoroTimer()));
-                      },
+                      onPressed: _clicked
+                          ? null
+                          : () {
+                              setState(() {
+                                _clicked = true;
+                                _breakMinutes = 0;
+                              });
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PomodoroTimer()));
+                            },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
@@ -681,7 +719,9 @@ class _BioBreakState extends State<BioBreak> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        _startBreakTimer();
+                        if (_breakMinutes == start) {
+                          _startBreakTimer();
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(

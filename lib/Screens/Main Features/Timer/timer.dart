@@ -37,6 +37,10 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
   bool? bio;
   int initialTime = 0;
   int _pomo = 0;
+  bool _water = true;
+  bool _ergo = true;
+  bool _food = true;
+  bool _bio = true;
 
   String formatHHMMSS(int seconds) {
     seconds = (seconds % 3600).truncate();
@@ -45,6 +49,50 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     String minuteStr = (minutes).toString().padLeft(2, '0');
     String secondStr = (seconds % 60).toString().padLeft(2, '0');
     return "$minuteStr:$secondStr";
+  }
+
+  void getValues() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    start = _prefs.getInt('minutes');
+    seconds = _prefs.getInt('seconds');
+    pomo = _prefs.getInt('pomos');
+    pomoCount = _prefs.getInt('pomoCounter');
+    water = _prefs.getBool('water');
+    ergo = _prefs.getBool('ergo');
+    food = _prefs.getBool('food');
+    bio = _prefs.getBool('bio');
+    _start = (start! * 60) + seconds!;
+    _pomoCount = pomoCount!;
+    _pomo = pomo!;
+    _water = water!;
+    _ergo = ergo!;
+    _food = food!;
+    _bio = bio!;
+    setPomoCount();
+    if (_pomoCount > _pomo) {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => Dashboard()));
+    }
+    setState(() {
+      initialTime = _start;
+    });
+  }
+
+  void setPomoCount() async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    _prefs.setInt('pomoCounter', _pomoCount++);
+  }
+
+  @override
+  void initState() {
+    getValues();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   void _startTimer() async {
@@ -57,27 +105,25 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
           _start = initialTime;
           setPomoCount();
           //selecting one break
-          if (water!) {
+          if (_water) {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => WaterBreak()));
-          } else {
-            if (ergo!) {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => ErgoBreak()));
-            } else {
-              if (food!) {
-                Navigator.pushReplacement(context,
-                    MaterialPageRoute(builder: (context) => FoodBreak()));
-              } else {
-                if (bio!) {
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => BioBreak()));
-                }
-              }
-            }
           }
+          if (_ergo) {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => ErgoBreak()));
+          }
+          if (_food) {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => FoodBreak()));
+          }
+          if (_bio) {
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (context) => BioBreak()));
+          }
+
           //selecting two breaks
-          if (water! && ergo!) {
+          if (_water && _ergo) {
             if ((_pomoCount + 1) % 2 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => WaterBreak()));
@@ -87,7 +133,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                     MaterialPageRoute(builder: (context) => ErgoBreak()));
               }
             }
-          } else if (water! && food!) {
+          } else if (_water && _food) {
             if ((_pomoCount + 1) % 2 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => WaterBreak()));
@@ -97,7 +143,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                     MaterialPageRoute(builder: (context) => FoodBreak()));
               }
             }
-          } else {
+          } else if (_water && _bio) {
             if ((_pomoCount + 1) % 2 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => WaterBreak()));
@@ -110,7 +156,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
           }
 
           //selecting two breaks
-          if (ergo! && food!) {
+          if (_ergo && _food) {
             if ((_pomoCount + 1) % 2 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => ErgoBreak()));
@@ -120,7 +166,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                     MaterialPageRoute(builder: (context) => FoodBreak()));
               }
             }
-          } else {
+          } else if (_ergo && _bio) {
             if ((_pomoCount + 1) % 2 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => ErgoBreak()));
@@ -133,7 +179,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
           }
 
           //selecting two breaks
-          if (food! && bio!) {
+          if (_food && _bio) {
             if ((_pomoCount + 1) % 2 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => FoodBreak()));
@@ -146,49 +192,55 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
           }
 
           //selecting three breaks
-          if (water! && ergo! && food!) {
-            if ((_pomoCount + 1) % 2 == 0 && (_pomoCount + 1) % 3 != 0) {
+          if (_water && _ergo && _food) {
+            if ((_pomoCount) == 0 || (_pomoCount) % 3 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => WaterBreak()));
-            } else if ((_pomoCount + 1) / 2 == 1) {
+            } else if ((_pomoCount + 2) % 3 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => ErgoBreak()));
             } else {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) => FoodBreak()));
+              if ((_pomoCount + 1) % 3 == 0) {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => FoodBreak()));
+              }
             }
-          } else if (water! && food! && ergo!) {
-            if ((_pomoCount + 1) % 2 == 0 && (_pomoCount + 1) % 3 != 0) {
+          } else if (_water && _food && _ergo) {
+            if ((_pomoCount) == 0 || (_pomoCount) % 3 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => WaterBreak()));
-            } else if ((_pomoCount + 1) / 2 == 1) {
+            } else if ((_pomoCount + 2) % 3 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => FoodBreak()));
             } else {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => BioBreak()));
+              if ((_pomoCount + 1) % 3 == 0) {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => BioBreak()));
+              }
             }
-          } else if (ergo! && food! && bio!) {
-            if ((_pomoCount + 1) % 2 == 0 && (_pomoCount + 1) % 3 != 0) {
+          } else if (_ergo && _food && _bio) {
+            if ((_pomoCount) == 0 || (_pomoCount) % 3 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => ErgoBreak()));
-            } else if ((_pomoCount + 1) / 2 == 1) {
+            } else if ((_pomoCount + 2) % 3 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => FoodBreak()));
             } else {
-              Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => BioBreak()));
+              if ((_pomoCount + 1) % 3 == 0) {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => BioBreak()));
+              }
             }
           }
 
           //selecting four
-          if (water! && ergo! && food! && bio!) {
+          if (_water && _ergo && _food && _bio) {
             if ((_pomoCount + 1) % 2 == 0 &&
                 (_pomoCount + 1) % 3 != 0 &&
                 (_pomoCount + 1) % 4 != 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => WaterBreak()));
-            } else if ((_pomoCount + 1) / 2 == 1) {
+            } else if ((_pomoCount + 1) % 2 == 0) {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => ErgoBreak()));
             } else if ((_pomoCount + 1) % 3 == 0) {
@@ -215,46 +267,6 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
         }
       });
     });
-  }
-
-  void getValues() async {
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    start = _prefs.getInt('minutes');
-    seconds = _prefs.getInt('seconds');
-    pomo = _prefs.getInt('pomos');
-    pomoCount = _prefs.getInt('pomoCounter');
-    water = _prefs.getBool('water');
-    ergo = _prefs.getBool('ergo');
-    food = _prefs.getBool('food');
-    bio = _prefs.getBool('bio');
-    _start = (start! * 60) + seconds!;
-    _pomoCount = pomoCount!;
-    _pomo = pomo!;
-    setPomoCount();
-    if (_pomoCount > _pomo) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Dashboard()));
-    }
-    setState(() {
-      initialTime = _start;
-    });
-  }
-
-  void setPomoCount() async {
-    SharedPreferences _prefs = await SharedPreferences.getInstance();
-    _prefs.setInt('pomoCounter', _pomoCount++);
-  }
-
-  @override
-  void initState() {
-    getValues();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 
   @override
