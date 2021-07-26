@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
 import 'package:focus_app/Screens/Main%20Features/Timer/timer.dart';
-import 'package:focus_app/Screens/mainDashboard.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class WaterBreak extends StatefulWidget {

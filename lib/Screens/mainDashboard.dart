@@ -36,6 +36,7 @@ class _DashboardState extends State<Dashboard> {
   int minutes = 0;
   int pomos = 0;
   int breakMinutes = 0;
+  int focusTime = 0;
   bool water = true;
   bool ergo = true;
   bool food = true;
@@ -82,6 +83,7 @@ class _DashboardState extends State<Dashboard> {
     ergo = await DatabaseService().getErgonomicBreak(user!.uid);
     food = await DatabaseService().getFoodBreak(user!.uid);
     bio = await DatabaseService().getBioBreak(user!.uid);
+    focusTime = await DatabaseService().getFocusTime(user!.uid);
     SharedPreferences? _pref = await SharedPreferences.getInstance();
     _pref.setInt('seconds', seconds);
     _pref.setInt('minutes', minutes);
@@ -92,6 +94,7 @@ class _DashboardState extends State<Dashboard> {
     _pref.setBool('ergo', ergo);
     _pref.setBool('food', food);
     _pref.setBool('bio', bio);
+    _pref.setInt('focusTime', focusTime);
   }
 
   //Alert Dialog for editing username
@@ -1013,13 +1016,51 @@ class _DashboardState extends State<Dashboard> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                IconButton(
-                  onPressed: _openDrawer,
-                  icon: Icon(
-                    Icons.menu,
-                    color: primary,
-                    size: size.width / 10,
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: _openDrawer,
+                      icon: Icon(
+                        Icons.menu,
+                        color: primary,
+                        size: size.width / 10,
+                      ),
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset(
+                          'assets/pngegg.png',
+                          width: 30,
+                          fit: BoxFit.cover,
+                        ),
+                        StreamBuilder<FocusUserData>(
+                          stream: DatabaseService(uid: user!.uid).userData,
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              FocusUserData data = snapshot.data!;
+                              return Text(
+                                data.credits!.toString(),
+                                style: Theme.of(context)
+                                    .primaryTextTheme
+                                    .headline1!
+                                    .copyWith(
+                                      color: primary,
+                                      fontSize: 18,
+                                    ),
+                              );
+                            } else {
+                              return CircularProgressIndicator();
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: size.height / 20,
                 ),
                 Center(
                   child: Text(
@@ -1030,6 +1071,7 @@ class _DashboardState extends State<Dashboard> {
                         .copyWith(color: primary, fontSize: 30),
                   ),
                 ),
+                SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(30, 30, 30, 5),
                   child: Row(
@@ -1046,7 +1088,7 @@ class _DashboardState extends State<Dashboard> {
                               },
                               child: Image.asset(
                                 'assets/Timer.png',
-                                width: size.width / 4.5,
+                                width: size.width / 3,
                               ),
                             ),
                             SizedBox(
@@ -1072,7 +1114,7 @@ class _DashboardState extends State<Dashboard> {
                               onTap: () {},
                               child: Image.asset(
                                 'assets/Notes.png',
-                                width: size.width / 5,
+                                width: size.width / 4,
                               ),
                             ),
                             SizedBox(
@@ -1091,6 +1133,7 @@ class _DashboardState extends State<Dashboard> {
                     ],
                   ),
                 ),
+                SizedBox(height: 30),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(30, 10, 30, 5),
                   child: Row(
@@ -1102,7 +1145,7 @@ class _DashboardState extends State<Dashboard> {
                               onTap: () {},
                               child: Image.asset(
                                 'assets/Trophy.png',
-                                width: size.width / 5,
+                                width: size.width / 4,
                               ),
                             ),
                             SizedBox(
@@ -1121,13 +1164,14 @@ class _DashboardState extends State<Dashboard> {
                       SizedBox(
                         width: size.width / 7,
                       ),
-                      Expanded(
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, bottom: 20),
                         child: Column(
                           children: [
                             GestureDetector(
                               onTap: () {},
                               child: Image.asset(
-                                'assets/NotifBlock.png',
+                                'assets/Custom.png',
                                 width: size.width / 4,
                               ),
                             ),
@@ -1135,7 +1179,7 @@ class _DashboardState extends State<Dashboard> {
                               height: 10,
                             ),
                             Text(
-                              'Notif Block',
+                              'Customize',
                               style: Theme.of(context)
                                   .primaryTextTheme
                                   .bodyText2!
@@ -1145,32 +1189,6 @@ class _DashboardState extends State<Dashboard> {
                         ),
                       ),
                     ],
-                  ),
-                ),
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Column(
-                      children: [
-                        GestureDetector(
-                          onTap: () {},
-                          child: Image.asset(
-                            'assets/Custom.png',
-                            width: size.width / 5,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          'Customize',
-                          style: Theme.of(context)
-                              .primaryTextTheme
-                              .bodyText2!
-                              .copyWith(color: primary, fontSize: 18),
-                        ),
-                      ],
-                    ),
                   ),
                 ),
               ],

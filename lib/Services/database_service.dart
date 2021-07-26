@@ -86,6 +86,29 @@ class DatabaseService extends ChangeNotifier {
   int? _minutes;
   int get minutes => _minutes!;
 
+  // update focusTime
+  Future<void> updateFocusTime(String uid, int time) {
+    return _focusCollection
+        .doc(uid)
+        .update({'focusTime': time})
+        .then((value) => print("FocusTime Updated"))
+        .catchError((error) => print("Faield to update focusTime: $error"));
+  }
+
+  // get FocusTime
+  Future<int> getFocusTime(String uid) {
+    return _focusCollection.doc(uid).get().then((DocumentSnapshot snapshot) {
+      try {
+        int focusTime = snapshot.get(FieldPath(['focusTime']));
+        print(focusTime);
+        return focusTime;
+      } on StateError catch (e) {
+        print(e.toString());
+        return 0;
+      }
+    });
+  }
+
   //updating username
   Future<void> updateUsername(String uid, String username) {
     return _focusCollection

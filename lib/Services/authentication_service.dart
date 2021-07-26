@@ -31,7 +31,7 @@ class AuthServices with ChangeNotifier {
 
       //create a  new document for each user
       await DatabaseService(uid: user!.uid)
-          .setInitialUserData(username, 0, 'default feedback', 0);
+          .setInitialUserData(username, 0, 'default feedback', 50);
       await DatabaseService(uid: user.uid)
           .setInitialSettings(4, 25, 0, 5, true, true, true, true);
 

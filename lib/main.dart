@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
+import 'package:focus_app/Screens/mainDashboard.dart';
 
 import 'package:focus_app/Screens/pageView.dart';
 
@@ -43,8 +44,10 @@ class FocusApp extends StatelessWidget {
                 title: 'Focus App',
                 theme: _buildFocusTheme(),
                 debugShowCheckedModeBanner: false,
-                home: FocusHomepage(
-                  title: 'Focus App',
+                home: Scaffold(
+                  body: FocusHomepage(
+                    title: 'Focus App',
+                  ),
                 ),
               ),
             );
@@ -97,9 +100,12 @@ class FocusHomepage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageViewIntro(),
-    );
+    final user = Provider.of<User?>(context);
+    if (user == null) {
+      return PageViewIntro();
+    } else {
+      return Dashboard();
+    }
   }
 }
 

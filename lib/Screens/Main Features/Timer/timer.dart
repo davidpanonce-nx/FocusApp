@@ -8,6 +8,8 @@ import 'package:focus_app/Screens/Main%20Features/Timer/break.dart';
 import 'package:focus_app/Screens/Main%20Features/Timer/timerSettings.dart';
 import 'package:focus_app/Screens/mainDashboard.dart';
 
+import 'package:focus_app/Services/database_service.dart';
+
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -41,6 +43,8 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
   bool _ergo = true;
   bool _food = true;
   bool _bio = true;
+  int? focusTime;
+  int? prevFocusTime;
 
   String formatHHMMSS(int seconds) {
     seconds = (seconds % 3600).truncate();
@@ -61,6 +65,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     ergo = _prefs.getBool('ergo');
     food = _prefs.getBool('food');
     bio = _prefs.getBool('bio');
+    focusTime = _prefs.getInt('focusTime');
     _start = (start! * 60) + seconds!;
     _pomoCount = pomoCount!;
     _pomo = pomo!;
@@ -69,6 +74,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     _food = food!;
     _bio = bio!;
     setPomoCount();
+
     if (_pomoCount > _pomo) {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Dashboard()));
@@ -81,6 +87,11 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
   void setPomoCount() async {
     SharedPreferences _prefs = await SharedPreferences.getInstance();
     _prefs.setInt('pomoCounter', _pomoCount++);
+  }
+
+  void setFocusTime(int seconds) async {
+    SharedPreferences _prefs = await SharedPreferences.getInstance();
+    _prefs.setInt('focusTime', seconds);
   }
 
   @override
@@ -101,7 +112,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
       setState(() {
         if (_start < 1) {
           timer.cancel();
-
+          updateFocusTime((initialTime * (pomoCount! + 1)) + focusTime!);
           _start = initialTime;
           setPomoCount();
           //selecting one break
@@ -269,6 +280,10 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
     });
   }
 
+  void updateFocusTime(int time) async {
+    await DatabaseService().updateFocusTime(user!.uid, time);
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -297,7 +312,12 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
                     Align(
                       alignment: AlignmentDirectional.topStart,
                       child: IconButton(
-                        onPressed: () => null,
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Dashboard()));
+                        },
                         icon: Image.asset(
                           'assets/Blue-button.png',
                         ),
