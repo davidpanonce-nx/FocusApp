@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:focus_app/Components/constants.dart';
+import 'package:focus_app/Models/models.dart';
 import 'package:focus_app/Screens/mainDashboard.dart';
 
 import 'package:focus_app/Screens/pageView.dart';
@@ -38,6 +39,10 @@ class FocusApp extends StatelessWidget {
                 ),
                 ChangeNotifierProvider<DatabaseService>.value(
                   value: DatabaseService(),
+                ),
+                StreamProvider<List<FocusRanking>>.value(
+                  value: DatabaseService().ranking,
+                  initialData: [],
                 ),
               ],
               child: MaterialApp(

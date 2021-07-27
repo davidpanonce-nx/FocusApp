@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.focus_app">
    <application
-        android:label="focus_app"
+        android:label="Focus"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

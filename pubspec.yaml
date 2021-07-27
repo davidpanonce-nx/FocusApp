@@ -28,9 +28,9 @@ dependencies:
   email_auth: ^0.0.1+4
   firebase_auth: ^3.0.1
   firebase_core: ^1.4.0
+  
   flutter_svg: ^0.22.0
   lint: ^1.5.3
-
   percent_indicator: ^3.0.1
   provider: ^5.0.0
   shared_preferences: ^2.0.6
@@ -38,6 +38,13 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  
+  flutter_launcher_icons: ^0.9.1
+
+flutter_icons:
+  image_path: "assets/focus_icon.png"
+  android: true
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -93,6 +100,10 @@ flutter:
     - assets/biobreak.png
     - assets/breakbg.png
     - assets/pngegg.png
+    - assets/1st.png
+    - assets/2nd.png
+    - assets/3rd.png
+    - assets/focus_icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

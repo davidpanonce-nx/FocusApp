@@ -415,19 +415,20 @@ class DatabaseService extends ChangeNotifier {
   Stream<FocusUserSettings> get userSettings {
     return _focusUserSettings.doc(uid).snapshots().map(_userSettingsFromSnap);
   }
+
+  List<FocusRanking> _focusRankingUsers(QuerySnapshot snapshot) {
+    return snapshot.docs.map((doc) {
+      return FocusRanking(
+        username: doc['username'] ?? '',
+        focusTime: doc['focusTime'] ?? 0,
+      );
+    }).toList();
+  }
+
+  Stream<List<FocusRanking>> get ranking {
+    return _focusCollection
+        .orderBy('focusTime', descending: true)
+        .snapshots()
+        .map(_focusRankingUsers);
+  }
 }
-
-// List<FocusUser> _focusUserListFromSnapshot(QuerySnapshot snapshot) {
-//   return snapshot.docs.map((doc) {
-//     return FocusUser(
-//       username: doc['username'] ?? '',
-//       focusTime: doc['focusTime'] ?? 0,
-//       feedBack: doc['feedback'] ?? '',
-//       credits: doc['credits'] ?? 0,
-//     );
-//   }).toList();
-// }
-
-// Stream<List<FocusUser>> get focuser {
-//   return focusCollection.snapshots().map(_focusUserListFromSnapshot);
-// }

@@ -288,169 +288,176 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      child: Scaffold(
-        body: Stack(
-          fit: StackFit.expand,
-          alignment: AlignmentDirectional.center,
-          children: <Widget>[
-            Container(
-              decoration: BoxDecoration(
-                color: secondaryVariant,
-              ),
-            ),
-            Image.asset(
-              'assets/clockBg.png',
-              fit: BoxFit.cover,
-            ),
-            SingleChildScrollView(
-              child: Container(
-                margin: EdgeInsets.fromLTRB(30, 30, 15, 45),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Align(
-                      alignment: AlignmentDirectional.topStart,
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Dashboard()));
-                        },
-                        icon: Image.asset(
-                          'assets/Blue-button.png',
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: size.height / 20,
-                    ),
-                    Text(
-                      'POMODORO TIMER',
-                      style: Theme.of(context)
-                          .primaryTextTheme
-                          .headline1!
-                          .copyWith(
-                            color: primary,
-                          ),
-                    ),
-                    SizedBox(
-                      height: size.height / 20,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: greenVariant,
-                        shape: BoxShape.circle,
-                      ),
-                      child: CircularPercentIndicator(
-                        percent: percent,
-                        lineWidth: 15,
-                        radius: size.width * 0.70,
-                        center: Text(
-                          formatHHMMSS(_start),
-                          style: Theme.of(context)
-                              .primaryTextTheme
-                              .headline1!
-                              .copyWith(
-                                color: Colors.black.withOpacity(0.70),
-                                fontSize: 30,
-                              ),
-                        ),
-                        animation: true,
-                        animateFromLastPercent: true,
-                        backgroundColor: Colors.black.withOpacity(0.20),
-                        progressColor: primary,
-                        circularStrokeCap: CircularStrokeCap.round,
-                      ),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      pomoCount.toString() + '/' + pomo.toString(),
-                      style: Theme.of(context)
-                          .primaryTextTheme
-                          .bodyText2!
-                          .copyWith(
-                            color: primary,
-                            fontSize: 20,
-                          ),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: size.height / 30,
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            stop = 1;
-                          },
-                          child: Image.asset(
-                            'assets/STOP.png',
-                            fit: BoxFit.cover,
-                            width: size.width / 8,
-                          ),
-                        ),
-                        SizedBox(
-                          width: size.height / 40,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            if (_start == initialTime) {
-                              paused = 0;
-                              stop = 0;
-                              _startTimer();
-                            } else {
-                              paused = 0;
-                              stop = 0;
-                            }
-                          },
-                          child: Image.asset(
-                            'assets/PLAY.png',
-                            fit: BoxFit.cover,
-                            width: size.width / 10,
-                          ),
-                        ),
-                        SizedBox(
-                          width: size.height / 40,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            paused = 1;
-                          },
-                          child: Image.asset(
-                            'assets/PAUSE.png',
-                            fit: BoxFit.cover,
-                            width: size.width / 8,
-                          ),
-                        ),
-                        SizedBox(
-                          width: size.height / 40,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => PomodoroSettings()));
-                          },
-                          child: Image.asset(
-                            'assets/EDIT.png',
-                            fit: BoxFit.cover,
-                            width: size.width / 8,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+          body: Stack(
+            fit: StackFit.expand,
+            alignment: AlignmentDirectional.center,
+            children: <Widget>[
+              Container(
+                decoration: BoxDecoration(
+                  color: secondaryVariant,
                 ),
               ),
-            ),
-          ],
+              Image.asset(
+                'assets/clockBg.png',
+                fit: BoxFit.cover,
+              ),
+              SingleChildScrollView(
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(30, 30, 15, 45),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Align(
+                        alignment: AlignmentDirectional.topStart,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Dashboard(
+                                          key: UniqueKey(),
+                                        )));
+                          },
+                          icon: Image.asset(
+                            'assets/Blue-button.png',
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height / 20,
+                      ),
+                      Text(
+                        'POMODORO TIMER',
+                        style: Theme.of(context)
+                            .primaryTextTheme
+                            .headline1!
+                            .copyWith(
+                              color: primary,
+                            ),
+                      ),
+                      SizedBox(
+                        height: size.height / 20,
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: greenVariant,
+                          shape: BoxShape.circle,
+                        ),
+                        child: CircularPercentIndicator(
+                          percent: percent,
+                          lineWidth: 15,
+                          radius: size.width * 0.70,
+                          center: Text(
+                            formatHHMMSS(_start),
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .headline1!
+                                .copyWith(
+                                  color: Colors.black.withOpacity(0.70),
+                                  fontSize: 30,
+                                ),
+                          ),
+                          animation: true,
+                          animateFromLastPercent: true,
+                          backgroundColor: Colors.black.withOpacity(0.20),
+                          progressColor: primary,
+                          circularStrokeCap: CircularStrokeCap.round,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        pomoCount.toString() + '/' + pomo.toString(),
+                        style: Theme.of(context)
+                            .primaryTextTheme
+                            .bodyText2!
+                            .copyWith(
+                              color: primary,
+                              fontSize: 20,
+                            ),
+                        textAlign: TextAlign.center,
+                      ),
+                      SizedBox(
+                        height: size.height / 30,
+                      ),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              stop = 1;
+                            },
+                            child: Image.asset(
+                              'assets/STOP.png',
+                              fit: BoxFit.cover,
+                              width: size.width / 8,
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.height / 40,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              if (_start == initialTime) {
+                                paused = 0;
+                                stop = 0;
+                                _startTimer();
+                              } else {
+                                paused = 0;
+                                stop = 0;
+                              }
+                            },
+                            child: Image.asset(
+                              'assets/PLAY.png',
+                              fit: BoxFit.cover,
+                              width: size.width / 10,
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.height / 40,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              paused = 1;
+                            },
+                            child: Image.asset(
+                              'assets/PAUSE.png',
+                              fit: BoxFit.cover,
+                              width: size.width / 8,
+                            ),
+                          ),
+                          SizedBox(
+                            width: size.height / 40,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => PomodoroSettings(
+                                            key: UniqueKey(),
+                                          )));
+                            },
+                            child: Image.asset(
+                              'assets/EDIT.png',
+                              fit: BoxFit.cover,
+                              width: size.width / 8,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -48,3 +48,10 @@ class FocusUserSettings {
       this.food,
       this.bio});
 }
+
+class FocusRanking {
+  final String? username;
+  final int? focusTime;
+
+  FocusRanking({this.username, this.focusTime});
+}
