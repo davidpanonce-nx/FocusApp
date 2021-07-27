@@ -34,7 +34,7 @@ class AuthServices with ChangeNotifier {
           .setInitialUserData(username, 0, 'default feedback', 50);
       await DatabaseService(uid: user.uid)
           .setInitialSettings(4, 25, 0, 5, true, true, true, true);
-
+      await DatabaseService(uid: user.uid).setInitialNotesCollection();
       return user;
     } on SocketException {
       setLoading(false);

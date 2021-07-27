@@ -19,6 +19,13 @@ class FocusUserData {
       {this.uid, this.username, this.focusTime, this.feedBack, this.credits});
 }
 
+class FocusNotes {
+  final String? title;
+  final String? content;
+
+  FocusNotes({this.title, this.content});
+}
+
 class FocusUserSettings {
   final String? uid;
   final int? pomos;

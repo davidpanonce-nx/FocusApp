@@ -521,6 +521,7 @@ class _RegisterCredentialsState extends State<RegisterCredentials> {
                                 _passwordController!.text.trim(),
                                 _usernameController!.text.trim(),
                               );
+
                               // Navigator.push(
                               //   context,
                               //   MaterialPageRoute(

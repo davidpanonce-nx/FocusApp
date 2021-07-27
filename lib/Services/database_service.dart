@@ -26,6 +26,14 @@ class DatabaseService extends ChangeNotifier {
     );
   }
 
+  Future setInitialNotesCollection() {
+    return _focusCollection
+        .doc(uid)
+        .collection('notes')
+        .doc()
+        .set({'title': 'Focus Notes', 'content': 'Welcome to Focus Notes'});
+  }
+
   //initial setting of settings
   Future setInitialSettings(int pomos, int minutes, int seconds,
       int breakMinutes, bool water, bool ergo, bool food, bool bio) async {
@@ -156,32 +164,6 @@ class DatabaseService extends ChangeNotifier {
         .delete()
         .then((value) => print("User Settings Deleted"))
         .catchError((error) => print("Failed to delete user settings: $error"));
-  }
-
-  //user data from snapshot
-  FocusUserData _userDataFromSnap(DocumentSnapshot snapshot) {
-    return FocusUserData(
-      uid: uid,
-      username: snapshot.get(FieldPath(['username'])),
-      focusTime: snapshot.get(FieldPath(['focusTime'])),
-      feedBack: snapshot.get(FieldPath(['feedback'])),
-      credits: snapshot.get(FieldPath(['credits'])),
-    );
-  }
-
-  //user settings from snapshot
-  FocusUserSettings _userSettingsFromSnap(DocumentSnapshot snapshot) {
-    return FocusUserSettings(
-      uid: uid,
-      pomos: snapshot.get(FieldPath(['pomos'])),
-      minutes: snapshot.get(FieldPath(['minutes'])),
-      seconds: snapshot.get(FieldPath(['seconds'])),
-      breakMinutes: snapshot.get(FieldPath(['break'])),
-      water: snapshot.get(FieldPath(['water'])),
-      ergo: snapshot.get(FieldPath(['ergo'])),
-      food: snapshot.get(FieldPath(['food'])),
-      bio: snapshot.get(FieldPath(['bio'])),
-    );
   }
 
   //get seconds
@@ -368,9 +350,65 @@ class DatabaseService extends ChangeNotifier {
         .catchError((error) => print("Failed to update bio break: $error"));
   }
 
+  // add notes
+  Future<void> addNotes(String title, String content) {
+    return _focusCollection.doc(uid).collection('notes').add({
+      'title': title,
+      'content': content,
+    });
+  }
+
+  //user data from snapshot
+  FocusUserData _userDataFromSnap(DocumentSnapshot snapshot) {
+    return FocusUserData(
+      uid: uid,
+      username: snapshot.get(FieldPath(['username'])),
+      focusTime: snapshot.get(FieldPath(['focusTime'])),
+      feedBack: snapshot.get(FieldPath(['feedback'])),
+      credits: snapshot.get(FieldPath(['credits'])),
+    );
+  }
+
+  //user settings from snapshot
+  FocusUserSettings _userSettingsFromSnap(DocumentSnapshot snapshot) {
+    return FocusUserSettings(
+      uid: uid,
+      pomos: snapshot.get(FieldPath(['pomos'])),
+      minutes: snapshot.get(FieldPath(['minutes'])),
+      seconds: snapshot.get(FieldPath(['seconds'])),
+      breakMinutes: snapshot.get(FieldPath(['break'])),
+      water: snapshot.get(FieldPath(['water'])),
+      ergo: snapshot.get(FieldPath(['ergo'])),
+      food: snapshot.get(FieldPath(['food'])),
+      bio: snapshot.get(FieldPath(['bio'])),
+    );
+  }
+
+  //notes data from snapshot
+  FocusNotes _userNotesFromSnap(DocumentSnapshot snapshot) {
+    return FocusNotes(
+      title: snapshot.get(FieldPath(['title'])),
+      content: snapshot.get(FieldPath(['content'])),
+    );
+  }
+
+  //get notes doc strem
+  Stream<FocusNotes> get notesData {
+    return _focusCollection
+        .doc(uid)
+        .collection('notes')
+        .doc()
+        .snapshots()
+        .map(_userNotesFromSnap);
+  }
+
   // get user doc stream
   Stream<FocusUserData> get userData {
     return _focusCollection.doc(uid).snapshots().map(_userDataFromSnap);
+  }
+
+  Stream<QuerySnapshot> get notesQuery {
+    return _focusCollection.doc(uid).collection('notes').snapshots();
   }
 
   //get user settings stream

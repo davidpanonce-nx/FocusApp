@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 
 import 'package:focus_app/Components/constants.dart';
 import 'package:focus_app/Models/models.dart';
+import 'package:focus_app/Screens/Main%20Features/Notes/notes.dart';
 import 'package:focus_app/Screens/Main%20Features/Timer/timer.dart';
 
 import 'package:focus_app/Services/authentication_service.dart';
 import 'package:focus_app/Services/database_service.dart';
+import 'package:focus_app/wrapper.dart';
 
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -997,8 +999,11 @@ class _DashboardState extends State<Dashboard> {
                           .copyWith(color: secondaryVariant),
                     ),
                     onTap: () async {
-                      loginProvider.logout();
-                      setState(() {});
+                      setState(() {
+                        loginProvider.logout();
+                        Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (context) => Wrapper()));
+                      });
                     },
                   ),
                 ],
@@ -1111,7 +1116,12 @@ class _DashboardState extends State<Dashboard> {
                         child: Column(
                           children: [
                             GestureDetector(
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Notes()));
+                              },
                               child: Image.asset(
                                 'assets/Notes.png',
                                 width: size.width / 4,
