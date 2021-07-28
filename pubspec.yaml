@@ -28,7 +28,7 @@ dependencies:
   email_auth: ^0.0.1+4
   firebase_auth: ^3.0.1
   firebase_core: ^1.4.0
-  
+  firebase_storage: ^10.0.0
   flutter_svg: ^0.22.0
   lint: ^1.5.3
   percent_indicator: ^3.0.1
@@ -104,6 +104,14 @@ flutter:
     - assets/2nd.png
     - assets/3rd.png
     - assets/focus_icon.png
+    - assets/Default.png
+    - assets/Lato.png
+    - assets/Nunito.png
+    - assets/OpenSans.png
+    - assets/Roboto.png
+    - assets/Scheme1.png
+    - assets/Scheme2.png
+    - assets/Scheme3.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -129,17 +137,65 @@ flutter:
   fonts:
     - family: Nunito
       fonts:
-        - asset: assets\fonts\Nunito-Light.ttf
+        - asset: assets/fonts/Nunito-Light.ttf
           weight: 200
-        - asset: assets\fonts\Nunito-Regular.ttf
+        - asset: assets/fonts/Nunito-Regular.ttf
           weight: 300
-        - asset: assets\fonts\Nunito-SemiBold.ttf
+        - asset: assets/fonts/Nunito-SemiBold.ttf
           weight: 400
-        - asset: assets\fonts\Nunito-Bold.ttf
+        - asset: assets/fonts/Nunito-Bold.ttf
           weight: 500
-        - asset: assets\fonts\Nunito-ExtraBold.ttf
+        - asset: assets/fonts/Nunito-ExtraBold.ttf
           weight: 600
-        - asset: assets\fonts\Nunito-Black.ttf
+        - asset: assets/fonts/Nunito-Black.ttf
           weight: 700
+    - family: Lato
+      fonts:
+        - asset: assets/fonts/Lato-Thin.ttf
+          weight: 100
+        - asset: assets/fonts/Lato-Light.ttf
+          weight: 200
+        - asset: assets/fonts/Lato-Regular.ttf
+          weight: 300
+        - asset: assets/fonts/Lato-Bold.ttf
+          weight: 400
+        - asset: assets/fonts/Lato-Bold.ttf
+          weight: 500
+        - asset: assets/fonts/Lato-Black.ttf
+          weight: 600
+        - asset: assets/fonts/Lato-Black.ttf
+          weight: 700
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSans-Light.ttf
+          weight: 200
+        - asset: assets/fonts/OpenSans-Regular.ttf
+          weight: 300
+        - asset: assets/fonts/OpenSans-SemiBold.ttf
+          weight: 400
+        - asset: assets/fonts/OpenSans-Bold.ttf
+          weight: 500
+        - asset: assets/fonts/OpenSans-ExtraBold.ttf
+          weight: 600
+        - asset: assets/fonts/OpenSans-ExtraBold.ttf
+          weight: 700
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Light.ttf
+          weight: 200
+        - asset: assets/fonts/Roboto-Regular.ttf
+          weight: 300
+        - asset: assets/fonts/Roboto-Medium.ttf
+          weight: 400
+        - asset: assets/fonts/Roboto-Bold.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto-Black.ttf
+          weight: 600
+        - asset: assets/fonts/Roboto-Black.ttf
+          weight: 700
+          
+
+
+
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

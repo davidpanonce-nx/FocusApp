@@ -44,6 +44,16 @@ class FocusApp extends StatelessWidget {
                   value: DatabaseService().ranking,
                   initialData: [],
                 ),
+                StreamProvider<FocusSchemes>.value(
+                  value: DatabaseService().colorData,
+                  initialData: FocusSchemes(
+                    primary: 4281689455,
+                    primaryVariant: 4283463809,
+                    secondary: 4294499527,
+                    secondaryVariant: 4294699226,
+                    greenVariant: 4288337852,
+                  ),
+                ),
               ],
               child: MaterialApp(
                 title: 'Focus App',

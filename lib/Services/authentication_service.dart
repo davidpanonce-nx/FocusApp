@@ -30,8 +30,17 @@ class AuthServices with ChangeNotifier {
       setLoading(false);
 
       //create a  new document for each user
-      await DatabaseService(uid: user!.uid)
-          .setInitialUserData(username, 0, 'default feedback', 50);
+      await DatabaseService(uid: user!.uid).setInitialUserData(
+          username,
+          0,
+          'default feedback',
+          50,
+          4281689455,
+          4283463809,
+          4294499527,
+          4294699226,
+          4288337852,
+          "Nunito");
       await DatabaseService(uid: user.uid)
           .setInitialSettings(4, 25, 0, 5, true, true, true, true);
       await DatabaseService(uid: user.uid).setInitialNotesCollection();

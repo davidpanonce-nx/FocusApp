@@ -15,13 +15,28 @@ class DatabaseService extends ChangeNotifier {
 
   //initial setting of data
   Future setInitialUserData(
-      String username, int focusTime, String feedback, int credits) async {
+      String username,
+      int focusTime,
+      String feedback,
+      int credits,
+      int primary,
+      int primaryVariant,
+      int secondary,
+      int secondaryVariant,
+      int greenVariant,
+      String fontFamily) async {
     return await _focusCollection.doc(uid).set(
       {
         'username': username,
         'focusTime': focusTime,
         'feedback': feedback,
         'credits': credits,
+        'primary': primary,
+        'primaryVariant': primaryVariant,
+        'secondary': secondary,
+        'secondaryVariant': secondaryVariant,
+        'greenVariant': greenVariant,
+        'fontFamily': fontFamily,
       },
     );
   }
@@ -350,12 +365,30 @@ class DatabaseService extends ChangeNotifier {
         .catchError((error) => print("Failed to update bio break: $error"));
   }
 
+  Future<void> updateCredits(String uid, int value) {
+    return _focusUserSettings
+        .doc(uid)
+        .update({'credits': value})
+        .then((value) => print("credits break update"))
+        .catchError((error) => print("Failed to update credits break: $error"));
+  }
+
   // add notes
   Future<void> addNotes(String title, String content) {
     return _focusCollection.doc(uid).collection('notes').add({
       'title': title,
       'content': content,
     });
+  }
+
+  FocusSchemes _userColorSchemesFromSnap(DocumentSnapshot snapshot) {
+    return FocusSchemes(
+      primary: snapshot.get(FieldPath(['primary'])),
+      primaryVariant: snapshot.get(FieldPath(['primaryVariant'])),
+      secondary: snapshot.get(FieldPath(['secondary'])),
+      secondaryVariant: snapshot.get(FieldPath(['secondaryVariant'])),
+      greenVariant: snapshot.get(FieldPath(['greenVariant'])),
+    );
   }
 
   //user data from snapshot
@@ -367,6 +400,31 @@ class DatabaseService extends ChangeNotifier {
       feedBack: snapshot.get(FieldPath(['feedback'])),
       credits: snapshot.get(FieldPath(['credits'])),
     );
+  }
+
+  //get primary
+  Future<int> getPrimary() {
+    return _focusUserSettings.doc(uid).get().then((DocumentSnapshot snapshot) {
+      try {
+        int primary = snapshot.get(FieldPath(['primary']));
+        print(primary);
+        return primary;
+      } on StateError catch (e) {
+        print(e.toString());
+        return 4281689455;
+      }
+    });
+  }
+
+  Future<void> updateColors(int primary, int primaryVariant, int secondary,
+      int secondaryVariant, int greenVariant) {
+    return _focusCollection.doc(uid).update({
+      'primary': primary,
+      'primaryVariant': primaryVariant,
+      'secondary': secondary,
+      'secondaryVariant': secondaryVariant,
+      'greenVariant': greenVariant,
+    });
   }
 
   //user settings from snapshot
@@ -390,6 +448,10 @@ class DatabaseService extends ChangeNotifier {
       title: snapshot.get(FieldPath(['title'])),
       content: snapshot.get(FieldPath(['content'])),
     );
+  }
+
+  Stream<FocusSchemes> get colorData {
+    return _focusCollection.doc(uid).snapshots().map(_userColorSchemesFromSnap);
   }
 
   //get notes doc strem

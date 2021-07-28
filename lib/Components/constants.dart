@@ -1,8 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:focus_app/Models/models.dart';
 
-const Color primary = Color(0xff35656F);
-const Color primaryVariant = Color(0xff507881);
-const Color secondary = Color(0xffF8DCC7);
-const Color secondaryVariant = Color(0xffFBE8DA);
-const Color greenVariant = Color(0xff9AD7BC);
-const Color buttonColor = Color(0xffF1D5BD);
+Color primary = Color(colors[0]);
+Color primaryVariant = Color(colors[1]);
+Color secondary = Color(colors[2]);
+Color secondaryVariant = Color(colors[3]);
+Color greenVariant = Color(colors[4]);
+Color buttonColor = Color(colors[5]);
+
+List<int> colors = [
+  0xff35656F,
+  0xff507881,
+  0xffF8DCC7,
+  0xffFBE8DA,
+  0xff9AD7BC,
+  0xffF1D5BD
+];
+
+ColorSchemes scheme = ColorSchemes();

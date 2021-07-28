@@ -114,6 +114,7 @@ class _PomodoroTimerState extends State<PomodoroTimer> {
           timer.cancel();
           updateFocusTime((initialTime * (pomoCount! + 1)) + focusTime!);
           _start = initialTime;
+
           setPomoCount();
           //selecting one break
           if (_water) {

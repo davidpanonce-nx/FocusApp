@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:focus_app/Components/constants.dart';
+
 import 'package:focus_app/Screens/introductory/breaksystem.dart';
 import 'package:focus_app/Screens/introductory/mainloading.dart';
 import 'package:focus_app/Screens/introductory/note.dart';
@@ -18,8 +18,16 @@ class PageViewIntro extends StatefulWidget {
 }
 
 class _PageViewIntroState extends State<PageViewIntro> {
+  Color primary = Color(0xff35656F);
+  Color primaryVariant = Color(0xff507881);
+  Color secondary = Color(0xffF8DCC7);
+  Color secondaryVariant = Color(0xffFBE8DA);
+  Color greenVariant = Color(0xff9AD7BC);
+  Color buttonColor = Color(0xffF1D5BD);
+
   PageController? pageController;
   Animatable<Color?>? background;
+
   @override
   void initState() {
     _initialize();

@@ -55,3 +55,25 @@ class FocusRanking {
 
   FocusRanking({this.username, this.focusTime});
 }
+
+class FocusSchemes {
+  final int? primary;
+  final int? primaryVariant;
+  final int? secondary;
+  final int? secondaryVariant;
+  final int? greenVariant;
+
+  FocusSchemes(
+      {this.primary,
+      this.primaryVariant,
+      this.secondary,
+      this.secondaryVariant,
+      this.greenVariant});
+}
+
+class ColorSchemes {
+  bool defaultColor = true;
+  bool scheme1 = false;
+  bool scheme2 = false;
+  bool scheme3 = false;
+}

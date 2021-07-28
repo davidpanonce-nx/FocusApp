@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:focus_app/Components/constants.dart';
 import 'package:focus_app/Models/models.dart';
+import 'package:focus_app/Screens/Main%20Features/Customize/customize.dart';
 import 'package:focus_app/Screens/Main%20Features/Notes/notes.dart';
 import 'package:focus_app/Screens/Main%20Features/Ranking/ranking.dart';
 import 'package:focus_app/Screens/Main%20Features/Timer/timer.dart';
@@ -1163,7 +1164,8 @@ class _DashboardState extends State<Dashboard> {
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => Ranking()));
+                                          builder: (context) =>
+                                              Ranking(key: UniqueKey())));
                                 },
                                 child: Image.asset(
                                   'assets/Trophy.png',
@@ -1191,7 +1193,12 @@ class _DashboardState extends State<Dashboard> {
                           child: Column(
                             children: [
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => Customize()));
+                                },
                                 child: Image.asset(
                                   'assets/Custom.png',
                                   width: size.width / 4,
